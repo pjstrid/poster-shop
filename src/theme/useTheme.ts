@@ -1,16 +1,10 @@
-import { createContext, useContext } from "react";
-import { themes, type ThemeName } from "./colors";
-
-export const ThemeContext = createContext<{
-  name: ThemeName;
-  toggle: () => void;
-}>({
-  name: "dark",
-  toggle: () => {},
-});
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { toggleTheme } from "@/store/settingsSlice";
+import { themes } from "./colors";
 
 export function useTheme() {
-  const { name, toggle } = useContext(ThemeContext);
+  const name = useAppSelector((s) => s.settings.theme);
+  const dispatch = useAppDispatch();
 
-  return { t: themes[name], name, toggle };
+  return { t: themes[name], name, toggle: () => dispatch(toggleTheme()) };
 }
