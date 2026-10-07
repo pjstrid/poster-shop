@@ -2,12 +2,12 @@ import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
 import { router } from "expo-router";
-import { ShoppingCart, User } from "lucide-react-native";
+import { Moon, ShoppingCart, Sun, User } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function Header() {
-  const { t } = useTheme();
+  const { t, name, toggle } = useTheme();
   const { isDesktop } = useIsDesktop();
   const insets = useSafeAreaInsets();
 
@@ -66,6 +66,16 @@ export function Header() {
           <Text style={[styles.iconText, { color: t.fg }]}>Profile</Text>
         )}
       </Pressable>
+
+      <Pressable
+        onPress={toggle}
+        style={({ pressed }) => [
+          styles.themeIcon,
+          pressed && { backgroundColor: t.btn },
+        ]}
+      >
+        {name === "dark" ? <Sun color={t.fg2} /> : <Moon color={t.fg2} />}
+      </Pressable>
     </View>
   );
 }
@@ -87,6 +97,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderStyle: "solid",
     borderWidth: 1,
+  },
+  themeIcon: {
+    flexDirection: "row",
+    alignItems: "center",
+    margin: 8,
+    gap: 8,
+    height: 40,
+    paddingHorizontal: 10,
+    borderRadius: 8,
   },
   iconText: {
     fontFamily: fonts.sansSemi,
