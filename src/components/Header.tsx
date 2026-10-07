@@ -1,7 +1,9 @@
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
-import { StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
+import { ShoppingCart, User } from "lucide-react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function Header() {
@@ -30,10 +32,40 @@ export function Header() {
           fontSize: isDesktop ? 40 : 32,
           color: t.accent,
         }}
+        onPress={() => router.push("/")}
       >
         POSTER SHOP
       </Text>
+
       <View style={styles.spacer}></View>
+
+      <Pressable
+        onPress={() => router.push("/")}
+        style={({ pressed }) => [
+          styles.icon,
+          pressed && { backgroundColor: t.btn },
+          { borderColor: t.btnLine },
+        ]}
+      >
+        <ShoppingCart size={20} color={t.btnFg} />
+        {isDesktop && (
+          <Text style={[styles.iconText, { color: t.btnFg }]}>Basket</Text>
+        )}
+      </Pressable>
+
+      <Pressable
+        onPress={() => router.push("/")}
+        style={({ pressed }) => [
+          styles.icon,
+          pressed && { backgroundColor: t.btn },
+          { borderColor: t.btnLine },
+        ]}
+      >
+        <User size={20} color={t.fg} />
+        {isDesktop && (
+          <Text style={[styles.iconText, { color: t.fg }]}>Profile</Text>
+        )}
+      </Pressable>
     </View>
   );
 }
@@ -42,6 +74,22 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
+    borderBottomWidth: 1,
   },
   spacer: { flex: 1 },
+  icon: {
+    flexDirection: "row",
+    alignItems: "center",
+    margin: 8,
+    gap: 8,
+    height: 40,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    borderStyle: "solid",
+    borderWidth: 1,
+  },
+  iconText: {
+    fontFamily: fonts.sansSemi,
+    fontSize: 14,
+  },
 });
