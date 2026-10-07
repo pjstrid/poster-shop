@@ -2,7 +2,6 @@ import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { useAppSelector } from "@/store/hooks";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
-import { CURRENCIES } from "@/utils/formatPrice";
 import { router } from "expo-router";
 import {
     ChevronDown,
@@ -19,7 +18,7 @@ export function Header() {
   const { isDesktop } = useIsDesktop();
   const insets = useSafeAreaInsets();
   const currency = useAppSelector((s) => s.settings.currency);
-  const currentCurrency = CURRENCIES.find((c) => c.code === currency);
+  //   const currentCurrency = CURRENCIES.find((c) => c.code === currency);
   const barHeight = isDesktop ? 72 : 56;
 
   const count = 3;
@@ -51,7 +50,7 @@ export function Header() {
       <View style={styles.spacer}></View>
 
       <Pressable
-        onPress={() => router.push("/")}
+        onPress={() => router.push("/basket")}
         style={({ pressed }) => [
           styles.icon,
           pressed && { backgroundColor: t.btn },
@@ -82,7 +81,7 @@ export function Header() {
       </Pressable>
 
       <Pressable
-        onPress={() => router.push("/")}
+        onPress={() => router.push("/profile")}
         style={({ pressed }) => [
           styles.icon,
           pressed && { backgroundColor: t.btn },
