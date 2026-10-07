@@ -1,6 +1,6 @@
 import { Currency } from "@/types/shop";
 
-export const CURRENCIES = [
+export const CURRENCIES: { code: Currency; flag: string; sym: string }[] = [
   { code: "SEK", flag: "🇸🇪", sym: "kr" },
   { code: "EUR", flag: "🇪🇺", sym: "€" },
   { code: "USD", flag: "🇺🇸", sym: "$" },
