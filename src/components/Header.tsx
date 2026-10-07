@@ -20,7 +20,7 @@ export function Header() {
   const insets = useSafeAreaInsets();
   const currency = useAppSelector((s) => s.settings.currency);
   const currentCurrency = CURRENCIES.find((c) => c.code === currency);
-  const barHeight = isDesktop ? 72 : 56;
+  const barHeight = isDesktop ? 72 : 62;
 
   const count = 3;
 
