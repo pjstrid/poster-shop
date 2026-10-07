@@ -2,6 +2,7 @@ import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { useAppSelector } from "@/store/hooks";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
+import { CURRENCIES } from "@/utils/formatPrice";
 import { router } from "expo-router";
 import {
     ChevronDown,
@@ -18,7 +19,7 @@ export function Header() {
   const { isDesktop } = useIsDesktop();
   const insets = useSafeAreaInsets();
   const currency = useAppSelector((s) => s.settings.currency);
-  //   const currentCurrency = CURRENCIES.find((c) => c.code === currency);
+  const currentCurrency = CURRENCIES.find((c) => c.code === currency);
   const barHeight = isDesktop ? 72 : 56;
 
   const count = 3;
@@ -114,10 +115,10 @@ export function Header() {
       >
         {/* TILLFÄLLIGT BORTTAGET DÅ SIMULATORN INTE VISAR FLAGGAN
          PÅ RÄTT SÄTT, SKA KOLLA ÖVER EN NY SIMULATOR */}
-        {/* <Text style={styles.flag}>{currentCurrency?.flag}</Text> */}
-        {/* {isDesktop && ( */}
-        <Text style={[styles.cCode, { color: t.fg }]}>{currency}</Text>
-        {/* )} */}
+        <Text style={styles.flag}>{currentCurrency?.flag}</Text>
+        {isDesktop && (
+          <Text style={[styles.cCode, { color: t.fg }]}>{currency}</Text>
+        )}
         <ChevronDown size={16} color={t.fg} />
       </Pressable>
 
