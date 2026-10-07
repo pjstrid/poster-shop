@@ -1,3 +1,4 @@
+import { Header } from "@/components/Header";
 import { store } from "@/store";
 import { useTheme } from "@/theme/useTheme";
 import { BebasNeue_400Regular } from "@expo-google-fonts/bebas-neue";
@@ -23,7 +24,8 @@ function AppShell() {
       <StatusBar style={name === "dark" ? "light" : "dark"} />
       <Stack
         screenOptions={{
-          headerShown: false,
+          headerShown: true,
+          header: () => <Header />,
           contentStyle: { backgroundColor: t.app },
         }}
       />
