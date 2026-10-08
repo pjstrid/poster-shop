@@ -61,7 +61,7 @@ export default function Index() {
             <PosterCard
               movie={item}
               onPress={() => {
-                router.push(`/`);
+                router.push(`/movie/${item.id}`);
                 console.log("Tryckt på:", item.title);
               }}
             />
