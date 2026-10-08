@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
   card: { width: "100%" },
   poster: {
     aspectRatio: 2 / 3,
-    borderRadius: 12,
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
