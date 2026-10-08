@@ -27,7 +27,7 @@ async function request<T>(
   return (await res.json()) as T;
 }
 
-export const GENRE_IDS = { adventure: 12, scifi: 878 } as const;
+export const GENRE_IDS = { fantasy: 14, thriller: 53 } as const;
 
 export function getTopRated(page = 1) {
   return request<Paged<TmdbMovie>>("/movie/top_rated", { page });
@@ -55,16 +55,16 @@ export function getDetails(id: number | string) {
   });
 }
 
-export type ListKey = "top" | "upcoming" | "adventure" | "scifi";
+export type ListKey = "top" | "upcoming" | "fantasy" | "thriller";
 export function getList(key: ListKey, page = 1) {
   switch (key) {
     case "top":
       return getTopRated(page);
     case "upcoming":
       return getUpcoming(page);
-    case "adventure":
-      return discoverByGenre(GENRE_IDS.adventure, page);
-    case "scifi":
-      return discoverByGenre(GENRE_IDS.scifi, page);
+    case "fantasy":
+      return discoverByGenre(GENRE_IDS.fantasy, page);
+    case "thriller":
+      return discoverByGenre(GENRE_IDS.thriller, page);
   }
 }
