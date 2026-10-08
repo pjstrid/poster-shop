@@ -1,7 +1,7 @@
 import { useTheme } from "@/theme/useTheme";
 import { TmdbMovie } from "@/types/tmdb";
 import { FALLBACK_RATES, formatPrice } from "@/utils/formatPrice";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 type Props = {
   movie: TmdbMovie;
@@ -17,16 +17,26 @@ export function PosterCard({ movie, onPress }: Props) {
       onPress={onPress}
       style={({ pressed }) => [styles.card, pressed && { opacity: 0.8 }]}
     >
-      <View
-        style={[
-          styles.poster,
-          { backgroundColor: t.surface, borderColor: t.line },
-        ]}
-      >
-        <Text style={[styles.title, { color: t.fg }]} numberOfLines={2}>
-          {movie.title}
-        </Text>
-      </View>
+      {movie.poster_path ? (
+        <Image
+          source={{
+            uri: `https://image.tmdb.org/t/p/w342${movie.poster_path}`,
+          }}
+          style={styles.poster}
+        />
+      ) : (
+        <View
+          style={[
+            styles.poster,
+            { backgroundColor: t.surface, borderColor: t.line },
+          ]}
+        >
+          <Text style={[styles.title, { color: t.fg }]} numberOfLines={2}>
+            {movie.title}
+          </Text>
+        </View>
+      )}
+
       <Text style={[styles.title, { color: t.fg }]} numberOfLines={2}>
         {movie.title}
       </Text>

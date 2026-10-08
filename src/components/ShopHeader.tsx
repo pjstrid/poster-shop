@@ -1,7 +1,9 @@
+import { ListKey } from "@/api/tmdb";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
-import { Search, Star } from "lucide-react-native";
+import { CalendarClock, Search, Star } from "lucide-react-native";
+import { useState } from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
 import { Chip } from "./Chip";
 
@@ -9,19 +11,29 @@ type Props = {
   count: number;
   query: string;
   onQueryChange: (text: string) => void;
-  activeChip: string | null;
-  onChipPress: (chip: string) => void;
+  listKey: ListKey;
+  onListChange: (key: ListKey) => void;
 };
 
 export function ShopHeader({
   count,
   query,
   onQueryChange,
-  activeChip,
-  onChipPress,
+  listKey,
+  onListChange,
 }: Props) {
   const { t } = useTheme();
   const { isDesktop } = useIsDesktop();
+  const [genreOpen, setGenreOpen] = useState(false);
+
+  const genreLabel =
+    listKey === "fantasy"
+      ? "Fantasy"
+      : listKey === "thriller"
+        ? "Thriller"
+        : "Genre";
+
+  const genreActive = listKey === "fantasy" || listKey === "thriller";
 
   return (
     <>
@@ -70,7 +82,7 @@ export function ShopHeader({
         />
       </View>
 
-      <Text style={{ color: t.fg2, fontSize: 12 }}>Sort by:</Text>
+      <Text style={{ color: t.fg2, fontSize: 12 }}>Selection:</Text>
 
       <ScrollView
         horizontal
@@ -78,12 +90,51 @@ export function ShopHeader({
         contentContainerStyle={{ gap: 8, paddingTop: 8, paddingBottom: 16 }}
       >
         <Chip
-          label="Newest"
+          label="Top rated"
           icon={Star}
-          active={activeChip === "newest"}
-          onPress={() => onChipPress("newest")}
+          active={listKey === "top"}
+          onPress={() => onListChange("top")}
+        />
+        <Chip
+          label="Upcoming"
+          icon={CalendarClock}
+          active={listKey === "upcoming"}
+          onPress={() => onListChange("upcoming")}
+        />
+        <Chip
+          label={genreLabel}
+          caret
+          active={genreActive}
+          open={genreOpen}
+          onPress={() => setGenreOpen((open) => !open)}
         />
       </ScrollView>
+      {genreOpen && (
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 8,
+            paddingBottom: 12,
+          }}
+        >
+          <Chip
+            label="Fantasy"
+            active={listKey === "fantasy"}
+            onPress={() => {
+              onListChange("fantasy");
+              setGenreOpen(false);
+            }}
+          />
+          <Chip
+            label="Thriller"
+            active={listKey === "thriller"}
+            onPress={() => {
+              onListChange("thriller");
+              setGenreOpen(false);
+            }}
+          />
+        </View>
+      )}
     </>
   );
 }

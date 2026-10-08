@@ -1,16 +1,25 @@
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
-import { LucideIcon } from "lucide-react-native";
+import { ChevronDown, ChevronUp, LucideIcon } from "lucide-react-native";
 import { Pressable, StyleSheet, Text } from "react-native";
 
 type Props = {
   label: string;
+  caret?: boolean;
   onPress: () => void;
   active?: boolean;
   icon?: LucideIcon;
+  open?: boolean;
 };
 
-export function Chip({ label, onPress, active = false, icon: Icon }: Props) {
+export function Chip({
+  label,
+  onPress,
+  active = false,
+  caret = false,
+  icon: Icon,
+  open = false,
+}: Props) {
   const { t } = useTheme();
 
   const textColor = active ? t.app : t.fg;
@@ -43,6 +52,12 @@ export function Chip({ label, onPress, active = false, icon: Icon }: Props) {
       >
         {label}
       </Text>
+      {caret &&
+        (open ? (
+          <ChevronUp size={14} color={textColor} />
+        ) : (
+          <ChevronDown size={14} color={textColor} />
+        ))}
     </Pressable>
   );
 }
