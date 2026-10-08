@@ -28,47 +28,43 @@ export default function Index() {
     setActiveChip((current) => (current === chip ? null : chip));
 
   return (
-    <View>
-      <FlatList
-        key={columns}
-        data={visible}
-        ListHeaderComponent={
-          <ShopHeader
-            count={visible.length}
-            query={query}
-            onQueryChange={setQuery}
-            activeChip={activeChip}
-            onChipPress={toggleChip}
+    <FlatList
+      key={columns}
+      data={visible}
+      ListHeaderComponent={
+        <ShopHeader
+          count={visible.length}
+          query={query}
+          onQueryChange={setQuery}
+          activeChip={activeChip}
+          onChipPress={toggleChip}
+        />
+      }
+      ListEmptyComponent={
+        <Text style={{ color: t.fg2, textAlign: "center", marginTop: 48 }}>
+          {"No posters found...\nTry a different title, or clear your filters."}
+        </Text>
+      }
+      keyExtractor={(movie) => String(movie.id)}
+      numColumns={columns}
+      columnWrapperStyle={{ gap }}
+      ItemSeparatorComponent={() => <View style={{ height: rowGap }} />}
+      contentContainerStyle={{
+        paddingHorizontal: padding,
+        paddingVertical: 20,
+      }}
+      renderItem={({ item }) => (
+        <View style={{ width: itemWidth }}>
+          <PosterCard
+            movie={item}
+            onPress={() => {
+              router.push(`/movie/${item.id}`);
+              console.log("Tryckt på:", item.title);
+            }}
           />
-        }
-        ListEmptyComponent={
-          <Text style={{ color: t.fg2, textAlign: "center", marginTop: 48 }}>
-            No posters found...
-            <br />
-            Try a different title, or clear your filters.
-          </Text>
-        }
-        keyExtractor={(movie) => String(movie.id)}
-        numColumns={columns}
-        columnWrapperStyle={{ gap }}
-        ItemSeparatorComponent={() => <View style={{ height: rowGap }} />}
-        contentContainerStyle={{
-          paddingHorizontal: padding,
-          paddingVertical: 20,
-        }}
-        renderItem={({ item }) => (
-          <View style={{ width: itemWidth }}>
-            <PosterCard
-              movie={item}
-              onPress={() => {
-                router.push(`/movie/${item.id}`);
-                console.log("Tryckt på:", item.title);
-              }}
-            />
-          </View>
-        )}
-      />
-    </View>
+        </View>
+      )}
+    />
   );
 }
 
