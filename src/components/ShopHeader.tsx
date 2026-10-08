@@ -1,8 +1,9 @@
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
-import { Search } from "lucide-react-native";
-import { Text, TextInput, View } from "react-native";
+import { Search, Star } from "lucide-react-native";
+import { ScrollView, Text, TextInput, View } from "react-native";
+import { Chip } from "./Chip";
 
 type Props = {
   count: number;
@@ -43,7 +44,7 @@ export function ShopHeader({
         <Text style={{ color: t.fg2, fontSize: 12 }}>{count} posters</Text>
       </View>
 
-      <View style={{ marginTop: 16, justifyContent: "center" }}>
+      <View style={{ marginVertical: 16, justifyContent: "center" }}>
         <Search
           size={18}
           color={t.fg2}
@@ -68,6 +69,21 @@ export function ShopHeader({
           }}
         />
       </View>
+
+      <Text style={{ color: t.fg2, fontSize: 12 }}>Sort by:</Text>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ gap: 8, paddingTop: 8, paddingBottom: 16 }}
+      >
+        <Chip
+          label="Newest"
+          icon={Star}
+          active={activeChip === "newest"}
+          onPress={() => onChipPress("newest")}
+        />
+      </ScrollView>
     </>
   );
 }
