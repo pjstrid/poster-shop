@@ -1,24 +1,33 @@
 import { PosterCard } from "@/components/PosterCard";
+import { ShopHeader } from "@/components/ShopHeader";
 import { useShopGrid } from "@/hooks/useShopGrid";
 import { MOVIES } from "@/mock/movies";
-import { fonts } from "@/theme/colors";
-import { useTheme } from "@/theme/useTheme";
+// import { useTheme } from "@/theme/useTheme";
 import { router } from "expo-router";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { FlatList, View } from "react-native";
 
 export default function Index() {
-  const { t } = useTheme();
+  // const { t } = useTheme();
   const { columns, gap, rowGap, padding, itemWidth } = useShopGrid();
+  const [query, setQuery] = useState("");
+
+  let visible = MOVIES.filter((movie) =>
+    movie.title.toLowerCase().includes(query.trim().toLowerCase()),
+  );
 
   return (
-    <View style={styles.container}>
-      <Text style={{ fontFamily: fonts.display, fontSize: 40, color: t.fg }}>
-        Popular
-      </Text>
-
+    <View>
       <FlatList
         key={columns}
-        data={MOVIES}
+        data={visible}
+        ListHeaderComponent={
+          <ShopHeader
+            count={visible.length}
+            query={query}
+            onQueryChange={setQuery}
+          />
+        }
         keyExtractor={(movie) => String(movie.id)}
         numColumns={columns}
         columnWrapperStyle={{ gap }}
@@ -43,11 +52,6 @@ export default function Index() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  preview: { width: 170 },
-});
+// const styles = StyleSheet.create({
+
+// });
