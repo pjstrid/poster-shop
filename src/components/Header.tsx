@@ -113,8 +113,6 @@ export function Header() {
           },
         ]}
       >
-        {/* TILLFÄLLIGT BORTTAGET DÅ SIMULATORN INTE VISAR FLAGGAN
-         PÅ RÄTT SÄTT, SKA KOLLA ÖVER EN NY SIMULATOR */}
         <Text style={styles.flag}>{currentCurrency?.flag}</Text>
         {isDesktop && (
           <Text style={[styles.cCode, { color: t.fg }]}>{currency}</Text>

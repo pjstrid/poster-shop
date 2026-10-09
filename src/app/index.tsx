@@ -1,6 +1,7 @@
-import { getList, ListKey } from "@/api/tmdb";
+import { getList, ListKey, searchMovies } from "@/api/tmdb";
 import { PosterCard } from "@/components/PosterCard";
 import { ShopHeader } from "@/components/ShopHeader";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useShopGrid } from "@/hooks/useShopGrid";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
@@ -22,47 +23,49 @@ export default function Index() {
 
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState<TmdbMovie[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [listKey, setListKey] = useState<ListKey>("top");
   const [reloadKey, setReloadKey] = useState(0);
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+
+  const debouncedQuery = useDebounce(query.trim());
+  const requestKey = `${listKey}|${debouncedQuery}|${reloadKey}`;
+  const loading = loadedKey !== requestKey;
 
   const changeList = (key: ListKey) => {
     if (key === listKey) return;
     setListKey(key);
-    setLoading(true);
-    setError(null);
+    setQuery("");
   };
 
   const retry = () => {
     setReloadKey((k) => k + 1);
-    setLoading(true);
-    setError(null);
   };
 
   useEffect(() => {
     let ignore = false;
 
-    getList(listKey)
+    const fetchMovies = debouncedQuery
+      ? searchMovies(debouncedQuery)
+      : getList(listKey);
+
+    fetchMovies
       .then((data) => {
-        if (!ignore) setMovies(data.results.filter((m) => m.poster_path));
+        if (ignore) return;
+        setMovies(data.results.filter((m) => m.poster_path));
+        setError(null);
       })
       .catch(() => {
         if (!ignore) setError("Could not load movies");
       })
       .finally(() => {
-        if (!ignore) setLoading(false);
+        if (!ignore) setLoadedKey(requestKey);
       });
 
     return () => {
       ignore = true;
     };
-  }, [listKey, reloadKey]);
-
-  let sortedMovies = [...movies].sort(
-    (a, b) =>
-      Number(a.release_date.slice(0, 4)) - Number(b.release_date.slice(0, 4)),
-  );
+  }, [requestKey, listKey, debouncedQuery]);
 
   const emptyContent = loading ? (
     <ActivityIndicator size="large" color={t.accent} style={styles.spinner} />
@@ -89,10 +92,10 @@ export default function Index() {
   return (
     <FlatList
       key={columns}
-      data={loading || error ? [] : sortedMovies}
+      data={loading || error ? [] : movies}
       ListHeaderComponent={
         <ShopHeader
-          count={sortedMovies.length}
+          count={movies.length}
           query={query}
           onQueryChange={setQuery}
           listKey={listKey}
