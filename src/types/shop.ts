@@ -11,8 +11,8 @@ export interface Item {
   product: Product;
   size: string;
   frame: Frame;
-  color: ShirtColor;
-  date: string;
+  color?: ShirtColor;
+  date?: string;
   qty: number;
   unitPriceSEK: number;
 }
