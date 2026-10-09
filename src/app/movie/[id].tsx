@@ -14,6 +14,7 @@ import { useLocalSearchParams } from "expo-router";
 import { ShoppingCart } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
+    ActivityIndicator,
     Image,
     Pressable,
     ScrollView,
@@ -73,9 +74,8 @@ export default function MovieDetails() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, padding }}>
-        <BackBtn />
-        <Text style={{ color: t.fg2, marginTop: 24 }}>Movie not found</Text>
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color={t.accent} />
       </View>
     );
   }
@@ -154,7 +154,7 @@ export default function MovieDetails() {
           <Text style={{ color: t.fg, fontFamily: fonts.sansSemi }}>
             {year}
           </Text>
-          {director && `  ·Directed by ${director}`}
+          {director && `  · Directed by ${director}`}
         </Text>
       </View>
 
@@ -193,13 +193,15 @@ export default function MovieDetails() {
 
       {/* Basket button */}
       <Pressable
+        disabled={!movie.poster_path}
         onPress={() => {
           console.log("Add", movie.title, size, frame, priceText);
         }}
         style={({ pressed }) => [
           styles.addBtn,
           { backgroundColor: t.btn, borderColor: t.btnLine },
-          pressed && { opacity: 0.85 },
+          !movie.poster_path && styles.disabled,
+          pressed && styles.pressed,
         ]}
       >
         <ShoppingCart size={24} color={t.btnFg} />
@@ -210,6 +212,11 @@ export default function MovieDetails() {
 }
 
 const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   content: {
     gap: 24,
     paddingBottom: 48,
@@ -253,4 +260,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 12,
   },
+  disabled: { opacity: 0.4 },
+  pressed: { opacity: 0.85 },
 });
