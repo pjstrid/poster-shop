@@ -27,7 +27,20 @@ async function request<T>(
   return (await res.json()) as T;
 }
 
-export const GENRE_IDS = { fantasy: 14, thriller: 53 } as const;
+export const GENRES = [
+  { key: "action", label: "Action", id: 28 },
+  { key: "adventure", label: "Adventure", id: 12 },
+  { key: "animation", label: "Animation", id: 16 },
+  { key: "comedy", label: "Comedy", id: 35 },
+  { key: "crime", label: "Crime", id: 80 },
+  { key: "drama", label: "Drama", id: 18 },
+  { key: "fantasy", label: "Fantasy", id: 14 },
+  { key: "horror", label: "Horror", id: 27 },
+  { key: "music", label: "Music", id: 10402 },
+  { key: "romance", label: "Romance", id: 10749 },
+  { key: "scifi", label: "Sci-Fi", id: 878 },
+  { key: "thriller", label: "Thriller", id: 53 },
+] as const;
 
 export function getTopRated(page = 1) {
   return request<Paged<TmdbMovie>>("/movie/top_rated", { page });
@@ -55,16 +68,13 @@ export function getDetails(id: number | string) {
   });
 }
 
-export type ListKey = "top" | "upcoming" | "fantasy" | "thriller";
+export type GenreKey = (typeof GENRES)[number]["key"];
+
+export type ListKey = "top" | "upcoming" | GenreKey;
 export function getList(key: ListKey, page = 1) {
-  switch (key) {
-    case "top":
-      return getTopRated(page);
-    case "upcoming":
-      return getUpcoming(page);
-    case "fantasy":
-      return discoverByGenre(GENRE_IDS.fantasy, page);
-    case "thriller":
-      return discoverByGenre(GENRE_IDS.thriller, page);
-  }
+  if (key === "top") return getTopRated(page);
+  if (key === "upcoming") return getUpcoming(page);
+
+  const genre = GENRES.find((genre) => genre.key === key)!;
+  return discoverByGenre(genre.id, page);
 }

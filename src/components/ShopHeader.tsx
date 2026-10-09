@@ -1,4 +1,4 @@
-import { ListKey } from "@/api/tmdb";
+import { GENRES, type ListKey } from "@/api/tmdb";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
@@ -26,14 +26,10 @@ export function ShopHeader({
   const { isDesktop } = useIsDesktop();
   const [genreOpen, setGenreOpen] = useState(false);
 
-  const genreLabel =
-    listKey === "fantasy"
-      ? "Fantasy"
-      : listKey === "thriller"
-        ? "Thriller"
-        : "Genre";
+  const activeGenre = GENRES.find((genre) => genre.key === listKey);
 
-  const genreActive = listKey === "fantasy" || listKey === "thriller";
+  const genreLabel = activeGenre ? activeGenre.label : "Genre";
+  const genreActive = activeGenre !== undefined;
 
   return (
     <>
@@ -109,32 +105,24 @@ export function ShopHeader({
           onPress={() => setGenreOpen((open) => !open)}
         />
       </ScrollView>
-      {genreOpen && (
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 8,
-            paddingBottom: 12,
-          }}
-        >
-          <Chip
-            label="Fantasy"
-            active={listKey === "fantasy"}
-            onPress={() => {
-              onListChange("fantasy");
-              setGenreOpen(false);
-            }}
-          />
-          <Chip
-            label="Thriller"
-            active={listKey === "thriller"}
-            onPress={() => {
-              onListChange("thriller");
-              setGenreOpen(false);
-            }}
-          />
-        </View>
-      )}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ gap: 8, paddingTop: 8, paddingBottom: 16 }}
+      >
+        {genreOpen &&
+          GENRES.map((genre) => (
+            <Chip
+              key={genre.key}
+              label={genre.label}
+              active={listKey === genre.key}
+              onPress={() => {
+                onListChange(genre.key);
+                setGenreOpen(false);
+              }}
+            />
+          ))}
+      </ScrollView>
     </>
   );
 }
