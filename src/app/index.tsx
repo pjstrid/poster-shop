@@ -117,7 +117,6 @@ export default function Index() {
             movie={item}
             onPress={() => {
               router.push(`/movie/${item.id}`);
-              console.log("Tryckt på:", item.title);
             }}
           />
         </View>

@@ -1,42 +1,84 @@
+import { getDetails } from "@/api/tmdb";
 import { BackBtn } from "@/components/BackBtn";
 import { Chip } from "@/components/Chip";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
-import { MOVIES } from "@/mock/movies";
 import { useAppSelector } from "@/store/hooks";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
 import { Frame } from "@/types/shop";
+import { TmdbDetails } from "@/types/tmdb";
 import { FALLBACK_RATES, formatPrice } from "@/utils/formatPrice";
 import { unitPrice } from "@/utils/pricing";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
 import { ShoppingCart } from "lucide-react-native";
-import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import {
+    Image,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
+
+const FRAME_COLORS = {
+  Black: ["#1b1b1d", "#0d0d10ff", "#1e1e21ff"],
+  Silver: [
+    "#cdcfd3ff",
+    "#aeb3bb",
+    "#e9ebef",
+    "#8d939c",
+    "#cfd6e0ff",
+    "#b4b9c1",
+  ],
+} as const;
+
+type DetailsResult = {
+  id: string;
+  movie: TmdbDetails | null;
+};
 
 export default function MovieDetails() {
   const { t } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const movie = MOVIES.find((movie) => movie.id === Number(id));
   const { isDesktop } = useIsDesktop();
   const [size, setSize] = useState<"30x50" | "50x70">("50x70");
   const [frame, setFrame] = useState<Frame>("None");
+  const [result, setResult] = useState<DetailsResult | null>(null);
+  const currency = useAppSelector((s) => s.settings.currency);
+
+  useEffect(() => {
+    let ignore = false;
+
+    getDetails(id)
+      .then((data) => {
+        if (!ignore) setResult({ id, movie: data });
+      })
+      .catch(() => {
+        if (!ignore) setResult({ id, movie: null });
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [id]);
 
   const padding = isDesktop ? 48 : 20;
-  const currency = useAppSelector((s) => s.settings.currency);
   const price = unitPrice({ product: "Poster", size, frame });
   const priceText = formatPrice(price, currency, FALLBACK_RATES[currency]);
-  const FRAME_COLORS = {
-    Black: ["#1b1b1d", "#050506", "#161618"],
-    Silver: [
-      "#cdcfd3ff",
-      "#aeb3bb",
-      "#e9ebef",
-      "#8d939c",
-      "#cfd6e0ff",
-      "#b4b9c1",
-    ],
-  } as const;
+
+  const loading = result?.id !== id;
+  const movie = loading ? null : result.movie;
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, padding }}>
+        <BackBtn />
+        <Text style={{ color: t.fg2, marginTop: 24 }}>Movie not found</Text>
+      </View>
+    );
+  }
 
   if (!movie) {
     return (
@@ -48,17 +90,26 @@ export default function MovieDetails() {
   }
 
   const year = movie.release_date.slice(0, 4);
+  const director = movie.credits.crew.find(
+    (person) => person.job === "Director",
+  )?.name;
 
-  const poster = (
+  const poster = movie.poster_path ? (
+    <Image
+      source={{ uri: `https://image.tmdb.org/t/p/w780${movie.poster_path}` }}
+      style={styles.poster}
+    />
+  ) : (
     <View
       style={[
         styles.poster,
+        styles.placeholder,
         { backgroundColor: t.surface, borderColor: t.line },
       ]}
     >
       <Text
         style={{ fontFamily: fonts.sansBold, color: t.fg }}
-        numberOfLines={2}
+        numberOfLines={3}
       >
         {movie.title}
       </Text>
@@ -103,7 +154,7 @@ export default function MovieDetails() {
           <Text style={{ color: t.fg, fontFamily: fonts.sansSemi }}>
             {year}
           </Text>
-          {"  ·  "}Directed by {movie.director}
+          {director && `  ·Directed by ${director}`}
         </Text>
       </View>
 
@@ -125,7 +176,11 @@ export default function MovieDetails() {
         {(["None", "Black", "Silver"] as const).map((f) => (
           <Chip
             key={f}
-            label={f === "None" ? "None" : `${f} +100 kr`}
+            label={
+              f === "None"
+                ? "None"
+                : `${f} +${formatPrice(100, currency, FALLBACK_RATES[currency])}`
+            }
             active={frame === f}
             onPress={() => setFrame(f)}
           />
@@ -176,7 +231,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 12,
   },
   optionRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   optionLabel: {
@@ -192,5 +246,11 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 8,
     borderWidth: 1,
+  },
+  placeholder: {
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 12,
   },
 });
