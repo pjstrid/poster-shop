@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 12,
   },
   placeholderText: { textAlign: "center", fontSize: 13 },
   title: { marginTop: 12, fontSize: 14, fontWeight: "600", lineHeight: 18 },
