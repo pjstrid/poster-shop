@@ -1,4 +1,5 @@
 import { useIsDesktop } from "@/hooks/useIsDesktop";
+import { selectCartCount } from "@/store/cartSlice";
 import { useAppSelector } from "@/store/hooks";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
@@ -22,7 +23,7 @@ export function Header() {
   const currentCurrency = CURRENCIES.find((c) => c.code === currency);
   const barHeight = isDesktop ? 72 : 62;
 
-  const count = 3;
+  const count = useAppSelector(selectCartCount);
 
   return (
     <View

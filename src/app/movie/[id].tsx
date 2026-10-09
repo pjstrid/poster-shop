@@ -2,7 +2,8 @@ import { getDetails } from "@/api/tmdb";
 import { BackBtn } from "@/components/BackBtn";
 import { Chip } from "@/components/Chip";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
-import { useAppSelector } from "@/store/hooks";
+import { addItem } from "@/store/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
 import { Frame } from "@/types/shop";
@@ -48,6 +49,7 @@ export default function MovieDetails() {
   const [frame, setFrame] = useState<Frame>("None");
   const [result, setResult] = useState<DetailsResult | null>(null);
   const currency = useAppSelector((s) => s.settings.currency);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     let ignore = false;
@@ -195,7 +197,19 @@ export default function MovieDetails() {
       <Pressable
         disabled={!movie.poster_path}
         onPress={() => {
-          console.log("Add", movie.title, size, frame, priceText);
+          dispatch(
+            addItem({
+              id: `${movie.id}-${size}-${frame}`,
+              movieId: movie.id,
+              title: movie.title,
+              posterPath: movie.poster_path,
+              product: "Poster",
+              size,
+              frame,
+              qty: 1,
+              unitPriceSEK: price,
+            }),
+          );
         }}
         style={({ pressed }) => [
           styles.addBtn,
