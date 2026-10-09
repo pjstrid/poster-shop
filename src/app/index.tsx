@@ -67,11 +67,6 @@ export default function Index() {
     };
   }, [requestKey, listKey, debouncedQuery]);
 
-  let sortedMovies = [...movies].sort(
-    (a, b) =>
-      Number(a.release_date.slice(0, 4)) - Number(b.release_date.slice(0, 4)),
-  );
-
   const emptyContent = loading ? (
     <ActivityIndicator size="large" color={t.accent} style={styles.spinner} />
   ) : error ? (
@@ -97,10 +92,10 @@ export default function Index() {
   return (
     <FlatList
       key={columns}
-      data={loading || error ? [] : sortedMovies}
+      data={loading || error ? [] : movies}
       ListHeaderComponent={
         <ShopHeader
-          count={sortedMovies.length}
+          count={movies.length}
           query={query}
           onQueryChange={setQuery}
           listKey={listKey}
