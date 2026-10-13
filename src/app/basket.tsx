@@ -2,7 +2,7 @@ import { BackBtn } from "@/components/BackBtn";
 import { CartRow } from "@/components/CartRow";
 import { useFormatPrice } from "@/hooks/useFormatPrice";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
-import { clearCart, selectCartItems, selectSubtotal } from "@/store/cartSlice";
+import { clearCart, selectCartItems, selectTotal } from "@/store/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
@@ -16,12 +16,11 @@ export default function Basket() {
   const dispatch = useAppDispatch();
 
   const items = useAppSelector(selectCartItems);
-  const subtotal = useAppSelector(selectSubtotal);
+  const total = useAppSelector(selectTotal);
   const currency = useAppSelector((s) => s.settings.currency);
   const format = useFormatPrice();
 
   const padding = isDesktop ? 48 : 16;
-  const total = subtotal;
 
   if (items.length === 0) {
     return (
@@ -86,7 +85,7 @@ export default function Basket() {
       <Pressable
         onPress={() => {
           // TODO nästa branch: dispatch(checkout(...)) + router.push("/confirm")
-          console.log("Checkout", { items, subtotal, total, currency });
+          console.log("Checkout", { items, total, currency });
         }}
         style={({ pressed }) => [
           styles.btn,
