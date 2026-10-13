@@ -84,7 +84,6 @@ export default function Basket() {
 
       <Pressable
         onPress={() => {
-          // TODO nästa branch: dispatch(checkout(...)) + router.push("/confirm")
           console.log("Checkout", { items, total, currency });
         }}
         style={({ pressed }) => [

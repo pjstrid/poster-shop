@@ -37,5 +37,4 @@ export const fonts = {
   sans: "Inter_400Regular",
   sansSemi: "Inter_600SemiBold",
   sansBold: "Inter_700Bold",
-  receipt: "CourierPrime_400Regular",
 };
