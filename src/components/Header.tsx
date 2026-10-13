@@ -3,24 +3,16 @@ import { selectCartCount } from "@/store/cartSlice";
 import { useAppSelector } from "@/store/hooks";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
-import { CURRENCIES } from "@/utils/formatPrice";
 import { router } from "expo-router";
-import {
-    ChevronDown,
-    Moon,
-    ShoppingCart,
-    Sun,
-    User,
-} from "lucide-react-native";
+import { Moon, ShoppingCart, Sun, User } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CurrencyPicker } from "./CurrencyPicker";
 
 export function Header() {
   const { t, name, toggle } = useTheme();
   const { isDesktop } = useIsDesktop();
   const insets = useSafeAreaInsets();
-  const currency = useAppSelector((s) => s.settings.currency);
-  const currentCurrency = CURRENCIES.find((c) => c.code === currency);
   const barHeight = isDesktop ? 72 : 62;
 
   const count = useAppSelector(selectCartCount);
@@ -101,25 +93,7 @@ export function Header() {
         )}
       </Pressable>
 
-      <Pressable
-        onPress={() => {}}
-        style={({ pressed }) => [
-          styles.icon,
-          pressed && { backgroundColor: t.btn },
-          {
-            borderColor: t.btnLine,
-            borderWidth: isDesktop ? 1 : 0,
-            marginHorizontal: isDesktop ? 6 : 4,
-            paddingHorizontal: isDesktop ? 10 : 6,
-          },
-        ]}
-      >
-        <Text style={styles.flag}>{currentCurrency?.flag}</Text>
-        {isDesktop && (
-          <Text style={[styles.cCode, { color: t.fg }]}>{currency}</Text>
-        )}
-        <ChevronDown size={16} color={t.fg} />
-      </Pressable>
+      <CurrencyPicker />
 
       <Pressable
         onPress={toggle}

@@ -1,6 +1,6 @@
+import { useFormatPrice } from "@/hooks/useFormatPrice";
 import { useTheme } from "@/theme/useTheme";
 import { TmdbMovie } from "@/types/tmdb";
-import { FALLBACK_RATES, formatPrice } from "@/utils/formatPrice";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
 export function PosterCard({ movie, onPress }: Props) {
   const { t } = useTheme();
   const year = movie.release_date.slice(0, 4);
+  const format = useFormatPrice();
 
   return (
     <Pressable
@@ -42,7 +43,7 @@ export function PosterCard({ movie, onPress }: Props) {
       </Text>
       <Text style={[styles.year, { color: t.fg2 }]}>{year}</Text>
       <Text style={[styles.price, { color: t.accent }]}>
-        från {formatPrice(199, "SEK", FALLBACK_RATES.SEK)}
+        from {format(199)}
       </Text>
     </Pressable>
   );

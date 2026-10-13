@@ -1,5 +1,8 @@
+import { getRates } from "@/api/currency";
 import { Header } from "@/components/Header";
 import { store } from "@/store";
+import { useAppDispatch } from "@/store/hooks";
+import { setRates } from "@/store/settingsSlice";
 import { useTheme } from "@/theme/useTheme";
 import { BebasNeue_400Regular } from "@expo-google-fonts/bebas-neue";
 import {
@@ -14,10 +17,22 @@ import {
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import { Provider } from "react-redux";
 
 function AppShell() {
   const { t, name } = useTheme();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    getRates()
+      .then((data) =>
+        dispatch(setRates({ rates: data.rates, date: data.date })),
+      )
+      .catch(() => {
+        // No network or API is down → hardcoded fallback rates get used automaticly
+      });
+  }, [dispatch]);
 
   return (
     <>

@@ -1,14 +1,14 @@
 import { getDetails } from "@/api/tmdb";
 import { BackBtn } from "@/components/BackBtn";
 import { Chip } from "@/components/Chip";
+import { useFormatPrice } from "@/hooks/useFormatPrice";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { addItem } from "@/store/cartSlice";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch } from "@/store/hooks";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
 import { Frame } from "@/types/shop";
 import { TmdbDetails } from "@/types/tmdb";
-import { FALLBACK_RATES, formatPrice } from "@/utils/formatPrice";
 import { unitPrice } from "@/utils/pricing";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
@@ -48,8 +48,8 @@ export default function MovieDetails() {
   const [size, setSize] = useState<"30x50" | "50x70">("50x70");
   const [frame, setFrame] = useState<Frame>("None");
   const [result, setResult] = useState<DetailsResult | null>(null);
-  const currency = useAppSelector((s) => s.settings.currency);
   const dispatch = useAppDispatch();
+  const format = useFormatPrice();
 
   useEffect(() => {
     let ignore = false;
@@ -69,7 +69,7 @@ export default function MovieDetails() {
 
   const padding = isDesktop ? 48 : 20;
   const price = unitPrice({ product: "Poster", size, frame });
-  const priceText = formatPrice(price, currency, FALLBACK_RATES[currency]);
+  const priceText = format(price);
 
   const loading = result?.id !== id;
   const movie = loading ? null : result.movie;
@@ -178,11 +178,7 @@ export default function MovieDetails() {
         {(["None", "Black", "Silver"] as const).map((f) => (
           <Chip
             key={f}
-            label={
-              f === "None"
-                ? "None"
-                : `${f} +${formatPrice(100, currency, FALLBACK_RATES[currency])}`
-            }
+            label={f === "None" ? "None" : `${f} +${format(100)}`}
             active={frame === f}
             onPress={() => setFrame(f)}
           />

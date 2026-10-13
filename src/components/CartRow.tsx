@@ -1,9 +1,9 @@
+import { useFormatPrice } from "@/hooks/useFormatPrice";
 import { removeItem, setQty } from "@/store/cartSlice";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch } from "@/store/hooks";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
 import { Item } from "@/types/shop";
-import { FALLBACK_RATES, formatPrice } from "@/utils/formatPrice";
 import { Trash2 } from "lucide-react-native";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Stepper } from "./Stepper";
@@ -11,8 +11,7 @@ import { Stepper } from "./Stepper";
 export function CartRow({ item }: { item: Item }) {
   const { t } = useTheme();
   const dispatch = useAppDispatch();
-  const currency = useAppSelector((s) => s.settings.currency);
-  const rate = FALLBACK_RATES[currency];
+  const format = useFormatPrice();
 
   const variant = `${item.size} · ${item.frame === "None" ? "No frame" : `${item.frame} frame`}`;
 
@@ -51,7 +50,7 @@ export function CartRow({ item }: { item: Item }) {
           <Trash2 size={18} color={t.fg2} />
         </Pressable>
         <Text style={[styles.price, { color: t.accent }]}>
-          {formatPrice(item.unitPriceSEK * item.qty, currency, rate)}
+          {format(item.unitPriceSEK * item.qty)}
         </Text>
       </View>
     </View>
