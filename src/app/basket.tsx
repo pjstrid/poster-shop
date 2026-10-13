@@ -4,6 +4,7 @@ import { useFormatPrice } from "@/hooks/useFormatPrice";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { clearCart, selectCartItems, selectTotal } from "@/store/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { showToast } from "@/store/toastSlice";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
 import { router } from "expo-router";
@@ -17,7 +18,6 @@ export default function Basket() {
 
   const items = useAppSelector(selectCartItems);
   const total = useAppSelector(selectTotal);
-  const currency = useAppSelector((s) => s.settings.currency);
   const format = useFormatPrice();
 
   const padding = isDesktop ? 48 : 16;
@@ -84,7 +84,9 @@ export default function Basket() {
 
       <Pressable
         onPress={() => {
-          console.log("Checkout", { items, total, currency });
+          router.navigate("/");
+          dispatch(clearCart());
+          dispatch(showToast("Thank you! Your order has been placed"));
         }}
         style={({ pressed }) => [
           styles.btn,

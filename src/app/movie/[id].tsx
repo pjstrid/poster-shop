@@ -5,6 +5,7 @@ import { useFormatPrice } from "@/hooks/useFormatPrice";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { addItem } from "@/store/cartSlice";
 import { useAppDispatch } from "@/store/hooks";
+import { showToast } from "@/store/toastSlice";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
 import { Frame } from "@/types/shop";
@@ -15,13 +16,13 @@ import { useLocalSearchParams } from "expo-router";
 import { ShoppingCart } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Image,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 const FRAME_COLORS = {
@@ -206,6 +207,7 @@ export default function MovieDetails() {
               unitPriceSEK: price,
             }),
           );
+          dispatch(showToast(`${movie.title} added to basket`));
         }}
         style={({ pressed }) => [
           styles.addBtn,
