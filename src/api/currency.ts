@@ -1,9 +1,11 @@
 import { Currency } from "@/types/shop";
 
+export type Rates = Partial<Record<Currency, number>>;
+
 type RateResponce = {
   base: string;
   date: string;
-  rates: Partial<Record<Currency, number>>;
+  rates: Rates;
 };
 
 const URL =
