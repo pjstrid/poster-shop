@@ -1,5 +1,6 @@
 import { getRates } from "@/api/currency";
 import { Header } from "@/components/Header";
+import { Toast } from "@/components/Toast";
 import { store } from "@/store";
 import { useAppDispatch } from "@/store/hooks";
 import { setRates } from "@/store/settingsSlice";
@@ -14,6 +15,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { View } from "react-native";
 import { Provider } from "react-redux";
 
 function AppShell() {
@@ -31,7 +33,7 @@ function AppShell() {
   }, [dispatch]);
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <StatusBar style={name === "dark" ? "light" : "dark"} />
       <Stack
         screenOptions={{
@@ -40,7 +42,8 @@ function AppShell() {
           contentStyle: { backgroundColor: t.app },
         }}
       />
-    </>
+      <Toast />
+    </View>
   );
 }
 
