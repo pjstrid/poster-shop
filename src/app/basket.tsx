@@ -1,11 +1,11 @@
 import { BackBtn } from "@/components/BackBtn";
 import { CartRow } from "@/components/CartRow";
+import { useFormatPrice } from "@/hooks/useFormatPrice";
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 import { clearCart, selectCartItems, selectSubtotal } from "@/store/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
-import { FALLBACK_RATES, formatPrice } from "@/utils/formatPrice";
 import { router } from "expo-router";
 import { ShoppingBag } from "lucide-react-native";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -18,7 +18,7 @@ export default function Basket() {
   const items = useAppSelector(selectCartItems);
   const subtotal = useAppSelector(selectSubtotal);
   const currency = useAppSelector((s) => s.settings.currency);
-  const rate = FALLBACK_RATES[currency];
+  const format = useFormatPrice();
 
   const padding = isDesktop ? 48 : 16;
   const total = subtotal;
@@ -78,7 +78,7 @@ export default function Basket() {
         >
           <Text style={[styles.totalLabel, { color: t.fg }]}>Total</Text>
           <Text style={[styles.totalValue, { color: t.accent }]}>
-            {formatPrice(total, currency, rate)}
+            {format(total)}
           </Text>
         </View>
       </View>
