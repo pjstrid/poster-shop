@@ -4,7 +4,7 @@ import { useAppSelector } from "@/store/hooks";
 import { fonts } from "@/theme/colors";
 import { useTheme } from "@/theme/useTheme";
 import { router } from "expo-router";
-import { Moon, ShoppingCart, Sun, User } from "lucide-react-native";
+import { Moon, ShoppingCart, Sun } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CurrencyPicker } from "./CurrencyPicker";
@@ -71,25 +71,6 @@ export function Header() {
               {count}
             </Text>
           </View>
-        )}
-      </Pressable>
-
-      <Pressable
-        onPress={() => router.push("/profile")}
-        style={({ pressed }) => [
-          styles.icon,
-          pressed && { backgroundColor: t.btn },
-          {
-            borderColor: t.btnLine,
-            borderWidth: isDesktop ? 1 : 0,
-            marginHorizontal: isDesktop ? 6 : 4,
-            paddingHorizontal: isDesktop ? 10 : 6,
-          },
-        ]}
-      >
-        <User size={20} color={t.fg} />
-        {isDesktop && (
-          <Text style={[styles.iconText, { color: t.fg }]}>Profile</Text>
         )}
       </Pressable>
 

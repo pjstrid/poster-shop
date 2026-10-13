@@ -6,10 +6,6 @@ import { setRates } from "@/store/settingsSlice";
 import { useTheme } from "@/theme/useTheme";
 import { BebasNeue_400Regular } from "@expo-google-fonts/bebas-neue";
 import {
-  CourierPrime_400Regular,
-  CourierPrime_700Bold,
-} from "@expo-google-fonts/courier-prime";
-import {
   Inter_400Regular,
   Inter_600SemiBold,
   Inter_700Bold,
@@ -54,8 +50,6 @@ export default function RootLayout() {
     Inter_400Regular,
     Inter_600SemiBold,
     Inter_700Bold,
-    CourierPrime_400Regular,
-    CourierPrime_700Bold,
   });
 
   if (!loaded && !error) return null;
