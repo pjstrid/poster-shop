@@ -1,4 +1,5 @@
 import { getList, ListKey, searchMovies } from "@/api/tmdb";
+import { Footer } from "@/components/Footer";
 import { PosterCard } from "@/components/PosterCard";
 import { ShopHeader } from "@/components/ShopHeader";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -102,6 +103,7 @@ export default function Index() {
           onListChange={changeList}
         />
       }
+      ListFooterComponent={<Footer />}
       ListEmptyComponent={emptyContent}
       keyExtractor={(movie) => String(movie.id)}
       numColumns={columns}
