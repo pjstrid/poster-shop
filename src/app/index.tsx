@@ -90,15 +90,10 @@ export default function Index() {
     </Text>
   );
 
-  let sortedMovies = [...movies].sort(
-    (a, b) =>
-      Number(a.release_date.slice(0, 4)) - Number(b.release_date.slice(0, 4)),
-  );
-
   return (
     <FlatList
       key={columns}
-      data={loading || error ? [] : sortedMovies}
+      data={loading || error ? [] : movies}
       ListHeaderComponent={
         <ShopHeader
           count={movies.length}
